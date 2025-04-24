@@ -35,7 +35,25 @@ limitations under the License.
 
 > Create a function for performing a reduction on an input ndarray.
 
+<section class="installation">
 
+## Installation
+
+```bash
+npm install @stdlib/ndarray-base-unary-reduce-strided1d-dispatch-factory
+```
+
+Alternatively,
+
+-   To load the package in a website via a `script` tag without installation and bundlers, use the [ES Module][es-module] available on the [`esm`][esm-url] branch (see [README][esm-readme]).
+-   If you are using Deno, visit the [`deno`][deno-url] branch (see [README][deno-readme] for usage intructions).
+-   For use in Observable, or in browser/node environments, use the [Universal Module Definition (UMD)][umd] build available on the [`umd`][umd-url] branch (see [README][umd-readme]).
+
+The [branches.md][branches-url] file summarizes the available branches and displays a diagram illustrating their relationships.
+
+To view installation and usage instructions specific to each branch build, be sure to explicitly navigate to the respective README files on each branch, as linked to above.
+
+</section>
 
 <section class="usage">
 
@@ -44,7 +62,7 @@ limitations under the License.
 <!-- eslint-disable id-length -->
 
 ```javascript
-import unaryStrided1dDispatchFactory from 'https://cdn.jsdelivr.net/gh/stdlib-js/ndarray-base-unary-reduce-strided1d-dispatch-factory@deno/mod.js';
+var unaryStrided1dDispatchFactory = require( '@stdlib/ndarray-base-unary-reduce-strided1d-dispatch-factory' );
 ```
 
 #### unaryStrided1dDispatchFactory( table, idtypes, odtypes, policy )
@@ -54,7 +72,7 @@ Returns a function for performing a reduction on an input ndarray.
 <!-- eslint-disable id-length -->
 
 ```javascript
-import base from 'https://cdn.jsdelivr.net/gh/stdlib-js/stats-base-ndarray-max@deno/mod.js';
+var base = require( '@stdlib/stats-base-ndarray-max' );
 
 var table = {
     'default': base
@@ -66,9 +84,21 @@ var policy = 'same';
 var unary = unaryStrided1dDispatchFactory( table, [ dtypes ], dtypes, policy );
 ```
 
--   **table**: strided reduction function dispatch table. Must have a `'default'` property and a corresponding strided reduction function. May have additional properties corresponding to specific data types and associated specialized strided reduction functions.
+The function has the following parameters:
+
+-   **table**: strided reduction function dispatch table. Must have the following properties:
+
+    -   **default**: default strided reduction function which should be invoked when provided ndarrays have data types which do not have a corresponding specialized implementation.
+
+    A dispatch table may have the following additional properties:
+
+    -   **types**: one-dimensional list of ndarray data types describing specialized input ndarray argument signatures. Only the input ndarray argument data types should be specified. Output ndarray and additional input ndarray argument data types should be omitted and are not considered during dispatch. The length of `types` must equal the number of strided functions specified by `fcns` (i.e., for every input ndarray data type, there must be a corresponding strided reduction function in `fcns`).
+    -   **fcns**: list of strided reduction functions which are specific to specialized input ndarray argument signatures.
+
 -   **idtypes**: list containing lists of supported input data types for each input ndarray argument.
--   **odtypes**: list of supported input data types.
+
+-   **odtypes**: list of supported output data types.
+
 -   **policy**: output data type policy.
 
 #### unary( x\[, ...args]\[, options] )
@@ -78,8 +108,8 @@ Performs a reduction on a provided input ndarray.
 <!-- eslint-disable id-length -->
 
 ```javascript
-import ndarray from 'https://cdn.jsdelivr.net/gh/stdlib-js/ndarray-base-ctor@deno/mod.js';
-import base from 'https://cdn.jsdelivr.net/gh/stdlib-js/stats-base-ndarray-max@deno/mod.js';
+var ndarray = require( '@stdlib/ndarray-base-ctor' );
+var base = require( '@stdlib/stats-base-ndarray-max' );
 
 var table = {
     'default': base
@@ -117,9 +147,9 @@ By default, the function returns an ndarray having a data type determined by the
 <!-- eslint-disable id-length -->
 
 ```javascript
-import ndarray from 'https://cdn.jsdelivr.net/gh/stdlib-js/ndarray-base-ctor@deno/mod.js';
-import base from 'https://cdn.jsdelivr.net/gh/stdlib-js/stats-base-ndarray-max@deno/mod.js';
-import getDType from 'https://cdn.jsdelivr.net/gh/stdlib-js/ndarray-dtype@deno/mod.js';
+var ndarray = require( '@stdlib/ndarray-base-ctor' );
+var base = require( '@stdlib/stats-base-ndarray-max' );
+var getDType = require( '@stdlib/ndarray-dtype' );
 
 var table = {
     'default': base
@@ -149,9 +179,9 @@ Performs a reduction on a provided input ndarray and assigns results to a provid
 <!-- eslint-disable id-length -->
 
 ```javascript
-import base from 'https://cdn.jsdelivr.net/gh/stdlib-js/stats-base-ndarray-max@deno/mod.js';
-import dtypes from 'https://cdn.jsdelivr.net/gh/stdlib-js/ndarray-dtypes@deno/mod.js';
-import ndarray from 'https://cdn.jsdelivr.net/gh/stdlib-js/ndarray-base-ctor@deno/mod.js';
+var base = require( '@stdlib/stats-base-ndarray-max' );
+var dtypes = require( '@stdlib/ndarray-dtypes' );
+var ndarray = require( '@stdlib/ndarray-base-ctor' );
 
 var idt = dtypes( 'real_and_generic' );
 var odt = idt;
@@ -197,6 +227,16 @@ The function accepts the following options:
 
 ## Notes
 
+-   A strided reduction function should have the following signature:
+
+    ```text
+    f( arrays )
+    ```
+
+    where
+
+    -   **arrays**: array containing an input ndarray, followed by any additional ndarray arguments.
+
 -   The output data type policy only applies to the function returned by `factory`. For the `assign` method, the output ndarray is allowed to have any data type.
 
 </section>
@@ -212,13 +252,15 @@ The function accepts the following options:
 <!-- eslint no-undef: "error" -->
 
 ```javascript
-import base from 'https://cdn.jsdelivr.net/gh/stdlib-js/stats-base-ndarray-max@deno/mod.js';
-import uniform from 'https://cdn.jsdelivr.net/gh/stdlib-js/random-array-uniform@deno/mod.js';
-import dtypes from 'https://cdn.jsdelivr.net/gh/stdlib-js/ndarray-dtypes@deno/mod.js';
-import dtype from 'https://cdn.jsdelivr.net/gh/stdlib-js/ndarray-dtype@deno/mod.js';
-import ndarray2array from 'https://cdn.jsdelivr.net/gh/stdlib-js/ndarray-to-array@deno/mod.js';
-import ndarray from 'https://cdn.jsdelivr.net/gh/stdlib-js/ndarray-ctor@deno/mod.js';
-import unaryStrided1dDispatchFactory from 'https://cdn.jsdelivr.net/gh/stdlib-js/ndarray-base-unary-reduce-strided1d-dispatch-factory@deno/mod.js';
+var dmax = require( '@stdlib/stats-base-ndarray-dmax' );
+var smax = require( '@stdlib/stats-base-ndarray-smax' );
+var base = require( '@stdlib/stats-base-ndarray-max' );
+var uniform = require( '@stdlib/random-array-uniform' );
+var dtypes = require( '@stdlib/ndarray-dtypes' );
+var dtype = require( '@stdlib/ndarray-dtype' );
+var ndarray2array = require( '@stdlib/ndarray-to-array' );
+var ndarray = require( '@stdlib/ndarray-ctor' );
+var unaryStrided1dDispatchFactory = require( '@stdlib/ndarray-base-unary-reduce-strided1d-dispatch-factory' );
 
 // Define the supported input and output data types:
 var idt = dtypes( 'real_and_generic' );
@@ -229,6 +271,14 @@ var policy = 'same';
 
 // Define a dispatch table:
 var table = {
+    'types': [
+        'float64', // input
+        'float32'  // input
+    ],
+    'fcns': [
+        dmax,
+        smax
+    ],
     'default': base
 };
 
@@ -277,7 +327,7 @@ console.log( ndarray2array( y ) );
 
 ## Notice
 
-This package is part of [stdlib][stdlib], a standard library with an emphasis on numerical and scientific computing. The library provides a collection of robust, high performance libraries for mathematics, statistics, streams, utilities, and more.
+This package is part of [stdlib][stdlib], a standard library for JavaScript and Node.js, with an emphasis on numerical and scientific computing. The library provides a collection of robust, high performance libraries for mathematics, statistics, streams, utilities, and more.
 
 For more information on the project, filing bug reports and feature requests, and guidance on how to develop [stdlib][stdlib], see the main project [repository][stdlib].
 
